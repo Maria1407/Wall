@@ -161,6 +161,14 @@ public class GameScreen extends BaseScreen
                     pow.randomize();
                     pow.moveToOrigin(br);
 
+                    paddle.addAction( Actions.sizeBy(32,0, 0.5f) );
+                    float volume=0.8f;
+                    Music song = Gdx.audio.newMusic(
+                            Gdx.files.internal("music.mp3"));
+                    song.setVolume(volume);
+                    song.play();
+
+
                     pow.setScale(0,0);
                     pow.addAction( Actions.scaleTo(1,1, 0.5f) );
 
@@ -179,11 +187,27 @@ public class GameScreen extends BaseScreen
                 String powName = pow.getAnimationName();
                 if ( powName.equals("paddle-expand") && paddle.getWidth() < 256)
                 {
+
+                    popped+=5;
+                    poppedLabel.setText("Score:"+popped);
                     paddle.addAction( Actions.sizeBy(32,0, 0.5f) );
+                    float volume=0.8f;
+                    Music song = Gdx.audio.newMusic(
+                            Gdx.files.internal("song1.mp3"));
+                    song.setVolume(volume);
+                    song.play();
                 }
                 else if ( powName.equals("paddle-shrink") && paddle.getWidth() > 64)
                 {
+
+                    popped-=5;
+                    poppedLabel.setText("Score:"+popped);
                     paddle.addAction( Actions.sizeBy(-32,0, 0.5f) );
+                    float volume=0.8f;
+                    Music song = Gdx.audio.newMusic(
+                            Gdx.files.internal("song2.mp3"));
+                    song.setVolume(volume);
+                    song.play();
                 }
 
                 removeList.add(pow);

@@ -16,7 +16,7 @@ public class MainMenu extends BaseScreen{
 
     @Override
     public void create() {
-        Texture waterTex = new Texture(Gdx.files.internal("water.jpg"), true);
+        Texture waterTex = new Texture(Gdx.files.internal("space.png"), true);
         waterTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         game.skin.add( "waterTex", waterTex );
         uiTable.background( game.skin.getDrawable("waterTex") );
