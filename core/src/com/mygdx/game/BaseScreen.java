@@ -45,28 +45,20 @@ public abstract class BaseScreen implements Screen, InputProcessor
     public abstract void create();
 
     public abstract void update(float dt);
-
-    // this is the gameloop. update, then render.
     public void render(float dt)
     {
         uiStage.act(dt);
-
-        // only pause gameplay events, not UI events
         if ( !isPaused() )
         {
             mainStage.act(dt);
             update(dt);
         }
-
-        // render
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         mainStage.draw();
         uiStage.draw();
     }
-
-    // pause methods
     public boolean isPaused()
     {  return paused;  }
 
@@ -75,8 +67,6 @@ public abstract class BaseScreen implements Screen, InputProcessor
 
     public void togglePaused()
     {  paused = !paused;  }
-
-    // methods required by Screen interface
     public void resize(int width, int height)
     {
         mainStage.getViewport().update(width, height, true);
@@ -92,8 +82,6 @@ public abstract class BaseScreen implements Screen, InputProcessor
     public void show()    {  }
 
     public void hide()    {  }
-
-    // methods required by InputProcessor interface
     public boolean keyDown(int keycode)
     {  return false;  }
 

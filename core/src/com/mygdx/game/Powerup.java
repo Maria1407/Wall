@@ -26,7 +26,7 @@ public class Powerup extends PhysicsActor
         return Intersector.overlaps( this.getRectangle(), other.getRectangle() );
     }
 
-    // randomly select one of stored animations
+
     public void randomize()
     {
         ArrayList<String> names = new ArrayList<String>( animationStorage.keySet() );

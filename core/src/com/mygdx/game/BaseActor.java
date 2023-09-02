@@ -31,8 +31,7 @@ public class BaseActor extends Group
 
     public void destroy()
     {
-        remove(); // removes self from Stage
-
+        remove();
         if (parentList != null)
             parentList.remove(this);
     }
@@ -71,16 +70,14 @@ public class BaseActor extends Group
 
     public void setEllipseBoundary()
     {
-        int n = 12; // number of vertices
+        int n = 12;
         float w = getWidth();
         float h = getHeight();
         float[] vertices = new float[2*n];
         for (int i = 0; i < n; i++)
         {
             float t = i * 6.28f / n;
-            // x-coordinate
             vertices[2*i] = w/2 * MathUtils.cos(t) + w/2;
-            // y-coordinate
             vertices[2*i+1] = h/2 * MathUtils.sin(t) + h/2;
         }
         boundingPolygon = new Polygon(vertices);
@@ -93,12 +90,6 @@ public class BaseActor extends Group
         boundingPolygon.setRotation( getRotation() );
         return boundingPolygon;
     }
-
-    /**
-     *  Determine if the collision polygons of two BaseActor objects overlap.
-     *  If (resolve == true), then when there is overlap, move this BaseActor
-     *    along minimum translation vector until there is no overlap.
-     */
     public boolean overlaps(BaseActor other, boolean resolve)
     {
         Polygon poly1 = this.getBoundingPolygon();

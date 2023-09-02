@@ -76,7 +76,7 @@ public class AnimatedActor extends BaseActor
     {
         super.copy(original);
         this.elapsedTime = 0;
-        this.animationStorage = original.animationStorage; // sharing a reference
+        this.animationStorage = original.animationStorage;
         this.activeName = new String(original.activeName);
         this.activeAnim = this.animationStorage.get( this.activeName );
     }

@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class GameUtils
 {
-    // creates an Animation from a single sprite sheet
+    public static int LifeCount=0;
     public static Animation parseSpriteSheet(String fileName, int frameCols, int frameRows,
                                              float frameDuration, Animation.PlayMode mode)
     {
@@ -34,9 +34,6 @@ public class GameUtils
         Array<TextureRegion> framesArray = new Array<TextureRegion>(frames);
         return new Animation(frameDuration, framesArray, mode);
     }
-
-    // creates an Animation from a set of image files
-    // name format: fileNamePrefix + N + fileNameSuffix, where 0 <= N < frameCount
     public static Animation parseImageFiles(String fileNamePrefix, String fileNameSuffix,
                                             int frameCount, float frameDuration, Animation.PlayMode mode)
     {

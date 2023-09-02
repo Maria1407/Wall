@@ -23,7 +23,7 @@ public class Ball extends PhysicsActor
         {
             float ballCenterX = this.getX() + this.getWidth()/2;
             float percent = (ballCenterX - paddle.getX()) / paddle.getWidth();
-            float bounceAngle = 150 - percent * 120; // 150 to 30
+            float bounceAngle = 150 - percent * 120;
             this.setVelocityAS( bounceAngle, this.getSpeed() );
         }
         return true;
@@ -39,7 +39,6 @@ public class Ball extends PhysicsActor
 
     public void act(float dt)
     {
-        // store previous position before and after updating...
         prevCircle = getCircle();
         super.act(dt);
         currCircle = getCircle();
@@ -62,9 +61,6 @@ public class Ball extends PhysicsActor
     {  return new Vector2( r.getX(), r.getY() + r.getHeight() );  }
     public Vector2 getTopRight(Rectangle r)
     {  return new Vector2( r.getX() + r.getWidth(), r.getY() + r.getHeight() );  }
-
-    // returns true is a signal to add to remove list, get points, etc.
-    // usually bounceOff true, but might be false for "thru-ball"-like effects
     public boolean overlaps(Brick brick, boolean bounceOff)
     {
         if ( !Intersector.overlaps( this.getCircle(), brick.getRectangle() ) )
@@ -105,7 +101,7 @@ public class Ball extends PhysicsActor
                 sideHit = true;
             }
 
-            if (!sideHit) // well, something hit. then, corner hit! change both dir.
+            if (!sideHit)
             {
                 multVelocityX(-1);
                 multVelocityY(-1);

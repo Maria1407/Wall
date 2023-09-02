@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public abstract class BaseGame extends Game
 {
-    // used to store resources common to multiple screens
     Skin skin;
 
     public BaseGame()

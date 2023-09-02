@@ -3,16 +3,18 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import java.util.ArrayList;
 
-public class GameScreen extends BaseScreen
+public class LevelOne extends BaseScreen
 {
     private Paddle paddle;
     private Ball ball;
@@ -24,20 +26,21 @@ public class GameScreen extends BaseScreen
     private ArrayList<Powerup> powerupList;
 
     private ArrayList<BaseActor> removeList;
-
-    // game world dimensions
     final int mapWidth = 800;
     final int mapHeight = 600;
     private int popped;
     private Label poppedLabel;
+    private Label poppedLabel1;
+    private Label.LabelStyle style;
 
-    public GameScreen(BaseGame g)
+    public LevelOne(BaseGame g)
     {
         super(g);
     }
 
     public void create()
     {
+        GameUtils.LifeCount=3;
         paddle = new Paddle();
         Texture paddleTex = new Texture(Gdx.files.internal("paddle.png"));
         paddleTex.setFilter( Texture.TextureFilter.Linear, Texture.TextureFilter.Linear );
@@ -72,6 +75,7 @@ public class GameScreen extends BaseScreen
         Color[] colorArray = {Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.PURPLE};
 
         for (int j = 0; j < 6; j++)
+
         {
             for (int i = 0; i < 10; i++)
             {
@@ -92,23 +96,38 @@ public class GameScreen extends BaseScreen
         poppedLabel.setFontScale(2);
         poppedLabel.setPosition(20, 540);
         uiStage.addActor( poppedLabel );
+
+        removeList = new ArrayList<BaseActor>();
+        font = new BitmapFont();
+        style = new Label.LabelStyle(font, Color.WHITE);
+        poppedLabel1 = new Label("Life:"+GameUtils.LifeCount, style);
+        poppedLabel1.setFontScale(2);
+        poppedLabel1.setPosition(500, 540);
+        uiStage.addActor( poppedLabel1 );
+
+        float volume=0.8f;
+        Music song = Gdx.audio.newMusic(
+                Gdx.files.internal("life.mp3"));
+        song.setVolume(volume);
+        song.play();
     }
 
     public void update(float dt)
     {
-        // adjust paddle position to horizontal mouse coordinate
+
 
         paddle.setPosition( Gdx.input.getX() - paddle.getWidth()/2, 32 );
 
-        // bound paddle to screen
 
-        if ( paddle.getX() < 0 )
+
+        if ( paddle.getX() < 0 ) {
+
             paddle.setX(0);
-
+        }
         if ( paddle.getX() + paddle.getWidth() > mapWidth )
             paddle.setX(mapWidth - paddle.getWidth());
 
-        // bounce ball off screen edges
+
 
         if (ball.getX() < 0)
         {
@@ -124,8 +143,37 @@ public class GameScreen extends BaseScreen
 
         if (ball.getY() < 0)
         {
+            if(GameUtils.LifeCount>0)GameUtils.LifeCount--;
             ball.setY(0);
             ball.multVelocityY(-1);
+            poppedLabel1.setText("Life:"+GameUtils.LifeCount);
+            if(GameUtils.LifeCount==0)
+            {
+                //напичать Игра закончена
+                ball.multVelocityX(0);
+                ball.multVelocityY(0);
+                TextButton startButton = new TextButton("Game over", game.skin,"uiTextButtonStyle");
+                startButton.addListener(
+                        new InputListener()
+                        {
+                            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+                            {  return true;  }
+
+                            public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+                            {
+                                game.setScreen(new MainMenu(game));
+                            }
+                        });
+                startButton.setPosition(220,210);
+                uiStage.addActor( startButton );
+
+
+                float volume=0.8f;
+                Music song = Gdx.audio.newMusic(
+                        Gdx.files.internal("gameover.mp3"));
+                song.setVolume(volume);
+                song.play();
+            }
         }
 
         if (ball.getY() + ball.getHeight() > mapHeight)
@@ -134,12 +182,12 @@ public class GameScreen extends BaseScreen
             ball.multVelocityY(-1);
         }
 
-        // bounce ball off paddle
+
 
         if ( ball.overlaps(paddle, true) )
         {
-           // ball.overlaps(paddle, true);
-            //play boing sound
+            ball.overlaps(paddle, true);
+
             float volume=0.8f;
             Music song = Gdx.audio.newMusic(
                     Gdx.files.internal("Water_Drop.ogg"));
@@ -151,7 +199,7 @@ public class GameScreen extends BaseScreen
 
         for (Brick br : brickList)
         {
-            if ( ball.overlaps(br, true) ) // bounces off bricks
+            if ( ball.overlaps(br, true) )
             {
                 removeList.add(br);
                 popped+=5;
@@ -164,7 +212,7 @@ public class GameScreen extends BaseScreen
                     paddle.addAction( Actions.sizeBy(32,0, 0.5f) );
                     float volume=0.8f;
                     Music song = Gdx.audio.newMusic(
-                            Gdx.files.internal("music.mp3"));
+                            Gdx.files.internal("conflict.mp3"));
                     song.setVolume(volume);
                     song.play();
 
@@ -178,6 +226,36 @@ public class GameScreen extends BaseScreen
                 }
                 poppedLabel.setText("Score:"+popped);
             }
+        }
+        if(brickList.isEmpty())
+        {
+            //подумай вывести надпись "Победа"
+
+            {
+                ball.multVelocityX(0);
+                ball.multVelocityY(0);
+                TextButton startButton = new TextButton("You win!!! Level 2", game.skin, "uiTextButtonStyle");
+                startButton.addListener(
+                        new InputListener()
+                        {
+                            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+                            {  return true;  }
+                            public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+                            {
+                                game.setScreen(new LevelTwo(game));
+                            }
+                        });
+                startButton.setPosition(200,210);
+                uiStage.addActor( startButton );
+
+                float volume=0.8f;
+                Music song = Gdx.audio.newMusic(
+                        Gdx.files.internal("win.mp3"));
+                song.setVolume(volume);
+                song.play();
+            }
+
+
         }
 
         for (Powerup pow : powerupList)
@@ -193,7 +271,7 @@ public class GameScreen extends BaseScreen
                     paddle.addAction( Actions.sizeBy(32,0, 0.5f) );
                     float volume=0.8f;
                     Music song = Gdx.audio.newMusic(
-                            Gdx.files.internal("song1.mp3"));
+                            Gdx.files.internal("plus.mp3"));
                     song.setVolume(volume);
                     song.play();
                 }
@@ -205,7 +283,7 @@ public class GameScreen extends BaseScreen
                     paddle.addAction( Actions.sizeBy(-32,0, 0.5f) );
                     float volume=0.8f;
                     Music song = Gdx.audio.newMusic(
-                            Gdx.files.internal("song2.mp3"));
+                            Gdx.files.internal("minus.mp3"));
                     song.setVolume(volume);
                     song.play();
                 }
@@ -220,14 +298,13 @@ public class GameScreen extends BaseScreen
         }
     }
 
-    // InputProcessor methods for handling discrete input
     public boolean keyDown(int keycode)
     {
         if (keycode == Input.Keys.P)
             togglePaused();
 
         if (keycode == Input.Keys.R)
-            game.setScreen( new GameScreen(game) );
+            game.setScreen( new LevelOne(game) );
 
         return false;
     }

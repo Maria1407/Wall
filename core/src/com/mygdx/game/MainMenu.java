@@ -56,7 +56,7 @@ public class MainMenu extends BaseScreen{
 
                     public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                     {
-                        game.setScreen( new GameScreen(game) );
+                        game.setScreen( new LevelOne(game) );
                     }
                 });
         TextButton quitButton = new TextButton("Quit", game.skin,"uiTextButtonStyle");
